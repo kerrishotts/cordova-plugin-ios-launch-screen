@@ -1,0 +1,28 @@
+{
+  "name": "cordova-plugin-ios-launch-screen",
+  "version": "1.0.0",
+  "description": "This plugin adds the ability to render a launch screen at app start such that iPad Pro resolutions\n                 are supported (instead of scaling the app).",
+  "cordova": {
+    "id": "cordova-plugin-ios-launch-screen",
+    "platforms": [
+      "ios"
+    ]
+  },
+  "keywords": [
+    "ipad pro",
+    "ios",
+    "ipad",
+    "launch screen",
+    "launch storyboard",
+    "ecosystem:cordova",
+    "cordova-ios"
+  ],
+  "engines": [
+    {
+      "name": "cordova-ios",
+      "version": ">=4.0.0"
+    }
+  ],
+  "author": "Kerri Shotts <kerrishotts@gmail.com>",
+  "license": "Apache 2.0 License"
+}
