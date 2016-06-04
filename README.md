@@ -42,6 +42,8 @@ this:
 
 ![Universal Launch Image](res/Default%403x%7Euniversal.png?raw=true "Universal Launch Image")
 
+> Image from <http://cordova.apache.org/artwork/>
+
 ## Designing your launch screen
 
 Apple suggests that your launch image should represent your app's unpopulated interface. Unfortunately, due to the way this plugin
