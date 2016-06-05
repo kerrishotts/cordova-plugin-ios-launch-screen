@@ -3,8 +3,6 @@ module.exports = function(ctx) {
         return;
     }
 
-    //console.log(JSON.stringify(ctx,null,2));
-
     var shell = ctx.requireCordovaModule("shelljs");
     var path = ctx.requireCordovaModule("path");
     var events = ctx.requireCordovaModule("cordova-common").events;
