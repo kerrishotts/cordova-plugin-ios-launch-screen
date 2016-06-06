@@ -8,6 +8,9 @@ longer need to be "scaled" on the iPad Pro!
 all sorts of edge cases where this fails. It works on my machines, but that doesn't necessarily mean anything. If you do encounter
 issues, please consider filing a bug report (along with any verbose logs).
 
+Also note that this plugin does not enable support for the new multitasking features provided by iOS 9. Though trivial to add,
+I don't want to make this plugin responsible for two features.
+
 ## Installation
 
 Using the Cordova / PhoneGap CLI:
@@ -27,7 +30,8 @@ Adding to `config.xml`:
 The plugin is designed to work without much effort on your part. All you need to do is provide a new splash screen for the launch
 storyboard, and the plugin will take it from there.
 
-The new splash screen _must_ be named `Default@3x~universal.png` and included in your `config.xml` file like so:
+The new splash screen _must_ be named `Default@3x~universal.png` and included in your `config.xml` file like so (replacing [width]
+and [height] appropriately, and using the appropriate path):
 
 ```xml
 <platform name="ios">
@@ -50,8 +54,8 @@ Apple suggests that your launch image should represent your app's unpopulated in
 works, it is probably going to be difficult to fully accomplish that goal for anything beyond a simple background color.
 
 Because the image is scaled using "aspect fill", you should render your launch image on a square canvas of sufficient size to cover
-the screen of the 12.9-inch iPad Pro. This means your image should be at least 2732 x 2732, but it can be bigger if you wish. If it
-is smaller, it will simply be scaled up (with a loss of clarity).
+the screen of the 12.9-inch iPad Pro. This means your image should be at least 2732x2732, but it can be larger if you wish. If it is
+smaller, it will simply be scaled up (with a corresponding loss of clarity).
 
 One image must work for _all_ device form factors, orientations, and viewport sizes. This means that you can only reliably target
 the center of the canvas so that you are sure the content isn't cropped in an undesirable manner. As such, my images have followed
@@ -60,7 +64,7 @@ this pattern:
 * simple color wash for the background that matches the background color of the app, or
 
 * a two-color wash for the background that matches the background color of the app and the background color of the navigation bar --
-  the two colors fill the screen equally (navigation bar at top, background color at bottom)
+  the two colors fill the screen equally (navigation bar for top half, background color for bottom half)
 
 * a simple logo or the app's name and tag line in the center of the app, sized such that it won't be cut off even on a small iPhone
   4s
@@ -75,7 +79,7 @@ this pattern:
 ## Aspect ratios and crops
 
 The following table should give you an idea of the areas that will be exposed on various devices. The crops are taken from the
-center of the image, so for an iPhone 4s, the visible area will be (455, 0) - (2277, 2732).
+center of the image, so for an iPhone 4s using a 2732x2732 source image, the visible area will be roughly (455, 0) - (2277, 2732).
 
 |     device     | aspect ratio |  portrait   |  landscape  | 
 |:--------------:|:------------:|:-----------:|:-----------:|
@@ -91,12 +95,29 @@ center of the image, so for an iPhone 4s, the visible area will be (455, 0) - (2
 ## Caveats
 
 The plugin will copy over any changes made to the launch image at each prepare and clean operation. Unfortunately, this does not
-guarantee that you'll see the launch image when you next launch the app. iOS caches the launch screen, and I'm not sure of a good
-way to clear this programmatically (if that is even possible). Even Xcode has this problem at times.
+guarantee that you'll see the launch image when you next launch the app. Apparently, iOS caches the launch screen, and I'm not sure
+of a good way to clear this programmatically (if that is even possible). Even Xcode has this problem at times.
 
 The simplest way to ensure that you see the desired splash screen in the simulator is to clear the simulator contents. This isn't
 apt to be practical on your physical devices, unfortunately. A reboot of your device or a delete/reinstall of your app should do the
 trick.
+
+## Examples
+
+This section links to some examples for your inspiration.
+
+### Logology
+
+The Logology splash is 3072x3072, and consists of a two-color background along with text for the app name and tag line. The top half
+matches the color of the navigation bar (and status bar on iOS), and the bottom half matches the background color of the app.
+
+![Logology Splash
+Screen](https://github.com/kerrishotts/Mastering-PhoneGap-Code-Package/blob/master/design/iOS%20Launch%20Screen%20variation%202-3072.png?raw=true
+"Logology Splash Screen")
+
+### Other examples
+
+If you create other examples, please feel free to submit with a PR.
 
 ## License
 
