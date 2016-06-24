@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='utf-8'?>
-<plugin id="cordova-plugin-ios-launch-screen" version="1.0.0"
+<plugin id="cordova-plugin-ios-launch-screen" version="2.0.0"
         xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
     <name>iOS Launch Screen Plugin</name>
     <description>This plugin adds the ability to render a launch screen at app start such that iPad Pro resolutions
                  are supported (instead of scaling the app). This also enables the use of multitasking features such
-                 as split screen support.</description>
+                 as split screen support (via separate plugin).</description>
     <author>Kerri Shotts</author>
     <license>Apache 2.0 License</license>
     <keywords>ipad pro, ios, ipad, launch screen, launch storyboard</keywords>
@@ -12,8 +12,8 @@
         <engine name="cordova-ios" version=">=4.0.0" />
     </engines>
     <platform name="ios">
-        <resource-file src="res/Default@3x~universal.png"
-                       target="Default@3x~universal.png" />
+        <resource-file src="res/LaunchMedia.xcassets"
+                       target="LaunchMedia.xcassets" />
         <resource-file src="res/Launch Screen.storyboard"
                        target="Launch Screen.storyboard" />
         <config-file target="*-Info.plist" parent="UILaunchStoryboardName">
