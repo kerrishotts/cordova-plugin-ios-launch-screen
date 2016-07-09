@@ -20,6 +20,7 @@
             <string>Launch Screen</string>
         </config-file>
         <hook type="after_prepare" src="scripts/ios/afterPrepare.js" />
+        <hook type="after_plugin_install" src="scripts/ios/afterPrepare.js" />
         <hook type="after_clean" src="scripts/ios/afterPrepare.js" />
     </platform>
 </plugin>
