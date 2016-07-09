@@ -124,7 +124,7 @@ They would look like the following in `config.xml`:
 If images are detected or provided (or are in the wrong location), you'll either see a blank screen at the start of the app, or 
 cropped variation of the following image:
 
-![@2x, Any, Any Image](res/LaunchMedia.xcassets/SplashImages.imageset/Default%403x%7Euniversal%7Eanyany.png?raw=true "@2x, Any, Any image")
+![@2x, Any, Any Image](res/LaunchMedia.xcassets/SplashImages.imageset/Default%402x%7Euniversal%7Eanyany.png?raw=true "@2x, Any, Any image")
 
 > Image from <http://cordova.apache.org/artwork/>
 
