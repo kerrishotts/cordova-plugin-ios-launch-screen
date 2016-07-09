@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" initialViewController="01J-lp-oVM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11129.15" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" generatesPrototypingConstraints="YES" useTraitCollections="YES" colorMatched="NO" initialViewController="01J-lp-oVM">
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <development version="7000" identifier="xcode"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11103.10"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -18,18 +17,16 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default@3x~universal.png" translatesAutoresizingMaskIntoConstraints="NO" id="ekK-FE-6tb">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="SplashImages" translatesAutoresizingMaskIntoConstraints="NO" id="S2z-1i-CYP">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                             </imageView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="ekK-FE-6tb" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leadingMargin" constant="-20" id="4HJ-Qk-pnN"/>
-                            <constraint firstItem="ekK-FE-6tb" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="8zr-cC-YcE"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="ekK-FE-6tb" secondAttribute="trailing" constant="-20" id="Kk0-gc-Qab"/>
-                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="ekK-FE-6tb" secondAttribute="bottom" id="ZtL-K0-ydc"/>
-                            <constraint firstItem="ekK-FE-6tb" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="topMargin" id="gzh-EP-bIL"/>
-                            <constraint firstItem="ekK-FE-6tb" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="z5K-Vi-mHW"/>
+                            <constraint firstItem="S2z-1i-CYP" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="5iZ-tS-2gI"/>
+                            <constraint firstItem="S2z-1i-CYP" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="szn-eL-EaP"/>
+                            <constraint firstAttribute="trailing" secondItem="S2z-1i-CYP" secondAttribute="trailing" id="viF-uN-gra"/>
+                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="S2z-1i-CYP" secondAttribute="bottom" id="z6H-xn-vF2"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -39,6 +36,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Default@3x~universal.png" width="2732" height="2732"/>
+        <image name="SplashImages" width="1366" height="1366"/>
     </resources>
 </document>
