@@ -1,15 +1,19 @@
 # cordova-plugin-ios-launch-screen
 
+> * Version: 2.0
+> * For: iOS 7+, cordova-ios 4.x+
+> * Author: Kerri Shotts (kerrishotts@gmail.com)
+
 This plugin provides launch screen storyboard support for iOS targets. Launch screen storyboards are required in order to fully
 support the new iPad Pro as there is no mechanism for providing a device-specific launch image. This means that Cordova apps no
-longer need to be "scaled" on the iPad Pro!
+longer need to be rendered in "scaled" mode on the iPad Pro!
 
 **NOTE**: Please consider this plugin a _proof of concept_! It has **not** been fully tested, and it's entirely possible there are
 all sorts of edge cases where this fails. It works on my machines, but that doesn't necessarily mean anything. If you do encounter
 issues, please consider filing a bug report (along with any verbose logs).
 
 Also note that this plugin does not enable support for the new multitasking features provided by iOS 9. Though trivial to add,
-I don't want to make this plugin responsible for two features.
+I don't want to make this plugin responsible for two features. These changes will be implemented in a separate plugin.
 
 ## Installation
 
@@ -27,37 +31,121 @@ Adding to `config.xml`:
 
 ## Use
 
-The plugin is designed to work without much effort on your part. All you need to do is provide a new splash screen for the launch
-storyboard, and the plugin will take it from there.
+The plugin is designed to work without much effort on your part. All you need to do is provide appropriate splash screens for the 
+launch storyboard, and the plugin will take it from there.
 
-The new splash screen _must_ be named `Default@3x~universal.png` and included in your `config.xml` file like so (replacing [width]
-and [height] appropriately, and using the appropriate path):
+Here's how it all works:
+
+* At install-time: 
+    1. A Launch Storyboard is added to the underlying iOS project
+    2. A launch-specific asset library is added to the underyling iOS project
+    3. Default launch images using the Cordova robot are added to this asset library
+    4. The project is configured to use the launch storyboard
+
+* At prepare-time (also build, emulate, and run):
+    1. `config.xml` is parsed to discover "universal" splash screens. This is the _key_ by which the plugin detects images that
+       should be included in the launch-specific asset library.
+    2. These images are copied to the launch-specific asset library.
+    3. The launch-specific asset library is updated to reference the new images.
+
+In order to fully understand what's going on, you need to understand size and density traits. In an asset library, images can be
+tailor-made to match specific screen densities (@1x, @2x, @3x) and screen sizes ("compact" or "any"). The combination of these two
+traits result in a possible _nine_ images that can be tailored to various iOS devices. In practice, you can get by supplying only
+_one_ image, but you'll most likely want to provide at least five.
+
+The screen densities themselves should be easy to understand. `1x` is considered low resolution, `2x` is considered to be `retina`
+or high resolution, and `3x` is a step beyond that. Of supported devices targeted by `cordova-ios`, all devices will use either @2x
+or @3x assets. As such, there is no point in supplying @1x assets.
+
+The size traits are a bit more fuzzy to grasp. With the advent of multiple form factors and split-screen multitasking, it became
+necessary for apps to be able to adjust their layout to various form factors without becoming bogged down by checking for each and
+every possible screen size and device. Instead, Apple supplied two size classes: "compact" and "regular". 
+
+These size classes describe the size of the viewport within which the app is rendering. If the viewport is pretty wide, the size
+class will be "regular". If it's narrow, the class will be "compact". The same is true with respect to height as well. When using an
+image set, you can filter on either "compact" or "regular", but not both. Instead, one can filter on "any" to catch the other class.
+This plugin uses "compact" and "any", the latter of which will match any "regular"-sized viewports.
+
+To specify a universal splash screen, you need to edit your `config.xml` file and include the splash screen, like so 
+(be sure to supply the appropriate path):
 
 ```xml
 <platform name="ios">
-    <splash src="res/screen/ios/Default@3x~universal.png" width="[width]" height="[height]" />
+    <splash src="res/splash/ios/Default@[scale]~universal~[width][height].png" />
 </platform>
 ```
 
-When rendered, the launch screen is scaled to fit the screen using "aspect fill".
+> Note: the `width` and `height` attributes are not necessary. You can specify them if you wish, but they aren't required.
 
-If no such image is detected, or the file doesn't exist where indicated, you'll receive the default launch image, which looks like
-this:
+If you just wanted to specify a single launch image, you could use something like this:
 
-![Universal Launch Image](res/Default%403x%7Euniversal.png?raw=true "Universal Launch Image")
+```xml
+<platform name="ios">
+    <splash src="res/splash/ios/Default@2x~universal~anyany.png" />
+</platform>
+```
+
+> Note: In this case, the image needs to be large enough to cover _all_ device classes, which is 2732 x 2732. The image is 
+> scaled to fit the screen using "aspect fill", which means the content in the middle will be in the middle of the device's screen
+> as well. Depending on the screen size and orientation, various parts of the image will be cropped, and so only a narrow area in
+> the center is safe to use.
+
+The benefit of using image assets like this is that the device will pick the image that best matches the device. If only one is
+supplied, only one will be used. However, it almost certainly means that the image will be scaled on some devices, which may be
+something you wish to avoid.
+
+The plugin comes with five default images, and you'll probably want to follow this example. This lets you be more specific with
+regard to what areas of an image are safe and which areas aren't, and also lets you target devices with images that are more
+specific to their screen size. For example, since only one device class matches an @3x density (the iPhone 6/6s plus), you can
+create a splash image specific to those devices. Keep in mind, however, that this could change in the future.
+
+The five images provided by the plugin are as follows:
+
+| Density |   Width   |   Height   |   Dimensions (safe)   | Filename                        | Viewports                                                |
+|:-------:|:---------:|:----------:|:---------------------:|:--------------------------------|:---------------------------------------------------------|
+|   @2x   |    any    |    any     |   2732(1808) x 2732   | Default@2x~universal~anyany.png | iPads (all orientations), iPad Pro (1/2 landscape split) |
+|   @2x   |  compact  |    any     |   1278(853) x 2732    | Default@2x~universal~anycom.png | All iPads (1/3 and 2/3 splits), iPad Air and Minis (1/2 split), all portrait iPhones         |
+|   @2x   |  compact  |  compact   |   1334(1125) x 750    | Default@2x~universal~comcom.png | All landscape iPhones _except_ iPhone 6+/6s+             |
+|   @3x   |    any    |  compact   |   2208 x 1242         | Default@3x~universal~anycom.png | iPhone 6+/6s+ landscape                                  |
+|   @3x   |  compact  |    any     |   1242 x 2208         | Default@3x~universal~comany.png | iPhone 6+/6s+ portrait                                   |
+
+They would look like the following in `config.xml`:
+
+```xml
+<platform name="ios">
+    <splash src="res/splash/ios/Default@2x~universal~anyany.png" />
+    <splash src="res/splash/ios/Default@2x~universal~anycom.png" />
+    <splash src="res/splash/ios/Default@2x~universal~comcom.png" />
+    <splash src="res/splash/ios/Default@3x~universal~anycom.png" />
+    <splash src="res/splash/ios/Default@3x~universal~comany.png" />
+</platform>
+```
+
+If images are detected or provided (or are in the wrong location), you'll either see a blank screen at the start of the app, or 
+cropped variation of the following image:
+
+![@2x, Any, Any Image](res/LaunchMedia.xcassets/SplashImages.imageset/Default%403x%7Euniversal%7Eanyany.png?raw=true "@2x, Any, Any image")
 
 > Image from <http://cordova.apache.org/artwork/>
 
-## Designing your launch screen
+In either case, you'll receive a warning on the command-line that there was a problem detecting your launch images.
+
+## Designing your launch screens
 
 Apple suggests that your launch image should represent your app's unpopulated interface. Unfortunately, due to the way this plugin
 works, it is probably going to be difficult to fully accomplish that goal for anything beyond a simple background color.
+
+It is up to you whether you want to follow the single-image workflow are if you want to create several images. The first is slightly
+easier in that you don't have to create a lot of files, but it imposes a lot of restrictions in the type of image you can create.
+The latter requires more images, but you have a bit more control.
+
+### Single-image workflow
 
 Because the image is scaled using "aspect fill", you should render your launch image on a square canvas of sufficient size to cover
 the screen of the 12.9-inch iPad Pro. This means your image should be at least 2732x2732, but it can be larger if you wish. If it is
 smaller, it will simply be scaled up (with a corresponding loss of clarity).
 
-One image must work for _all_ device form factors, orientations, and viewport sizes. This means that you can only reliably target
+One image _can_ work for all device form factors, orientations, and viewport sizes. This means that you can only reliably target
 the center of the canvas so that you are sure the content isn't cropped in an undesirable manner. As such, my images have followed
 this pattern:
 
@@ -76,7 +164,7 @@ this pattern:
   want to use something else. You can use a smaller size too, which makes sense for a color wash, but will blur any text or
   graphics.
 
-## Aspect ratios and crops
+#### Aspect ratios and crops
 
 The following table should give you an idea of the areas that will be exposed on various devices. The crops are taken from the
 center of the image, so for an iPhone 4s using a 2732x2732 source image, the visible area will be roughly (455, 0) - (2277, 2732).
@@ -91,6 +179,19 @@ center of the image, so for an iPhone 4s using a 2732x2732 source image, the vis
 |      iPad      |      4:3     | 2048 x 2732 | 2732 x 2048 |
 |   iPad Minis   |      4:3     | 2048 x 2732 | 2732 x 2048 |
 | 12.9" iPad Pro |      4:3     | 2048 x 2732 | 2732 x 2048 |
+
+### Multi-image workflows
+
+There are only two devices that you can reliably target at the time of this writing: the "+" version of the iPhone 6 and 6s family.
+As such, you can re-use the launch images you've probably already designed. Note that this could always change in the future.
+
+For the remaining images, you will always be rendering in an environment that crops some portion of the image. As such, you still
+must be careful to stay within safe areas emanating from the center of the image. You can follow the _single-image workflow_ to
+create the `@2x~universal~anyany` version, and then use that version to adjust as needed for the `@2x~universal~comany` version.
+
+The `@2x~univesal~comcom` version is used only by iPhones in landscape mode (excluding the "+" models). As such, you should be able
+to use the image you've likely already created for the iPhone6/6s, with the understanding that smaller phones would crop the sides
+by a small degree.
 
 ## Caveats
 
