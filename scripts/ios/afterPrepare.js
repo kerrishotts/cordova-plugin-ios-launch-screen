@@ -88,8 +88,11 @@ module.exports = function(ctx) {
 
     // this is so we can log information using Cordova's events.emit method
     var events = ctx.requireCordovaModule("cordova-common").events;
-    events.emit("verbose", "Context:" + JSON.stringify(ctx,null,2));
-    if (ctx.opts.cordova.platforms.indexOf("ios") < 0) {
+    // useful for debug: events.emit("verbose", "Context:" + JSON.stringify(ctx,null,2));
+    
+    if (ctx.opts.cordova.platforms.indexOf("ios") < 0) {              // Interestingly, this doesn't seem to be of much use --
+                                                                      // it seems we only get called when ios is explicitly included
+                                                                      // in the prepare command. Bug?
         // if the user doesn't have an iOS platform, there's no point in doing any of this
         return;
     }
