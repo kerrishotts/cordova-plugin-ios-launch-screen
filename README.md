@@ -53,7 +53,7 @@ Here's how it all works:
 
 In order to fully understand what's going on, you need to understand size and density traits. In an image set, images can be
 tailor-made to match specific screen densities (@1x, @2x, @3x) and screen sizes ("compact" or "any"). The combination of these two
-traits result in a possible _nine_ images that can be tailored to various iOS devices. In practice, you can get by supplying only
+traits result in a possible _twelve_ images that can be tailored to various iOS devices. In practice, you can get by supplying only
 _one_ image, but you'll most likely want to provide at least five.
 
 > Note: there are other combinations of traits that can be used; but for our purposes, size and density are the important ones.
